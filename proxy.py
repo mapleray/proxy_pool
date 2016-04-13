@@ -15,6 +15,7 @@ class Proxy(object):
     def __init__(self, max_page=1):
         self.max_page = max_page
         self.proxies = []
+        self.checked_proxies = []
         self.s = requests.Session()
         self.headers = {
             'Host': 'proxy.peuland.com',
@@ -52,8 +53,11 @@ class Proxy(object):
             i = i + 1
 
     def _check_proxy(self, proxy):
-        # need to do
-        pass
+        try:
+            r = requests.get('http://httpbin.org/ip', proxies=proxy, timeout=10)
+            self.checked_proxies.append(proxy)
+        except Exception as e:
+            print e
 
     def get_proxy(self):
         self._parse_proxy()
@@ -61,8 +65,7 @@ class Proxy(object):
         pool.map(self._check_proxy, self.proxies)
         pool.close()
         pool.join()
-        return self.proxies
-
+        return self.checked_proxies
 
 
 if __name__ == '__main__':
