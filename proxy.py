@@ -52,10 +52,16 @@ class Proxy(object):
                 self.proxies.append({proxy_type: ip+':' +port})
             i = i + 1
 
-    def _check_proxy(self, proxy):
+    def _check_proxy(self, proxy, anonymous=False):
+
         try:
             r = requests.get('http://httpbin.org/ip', proxies=proxy, timeout=10)
-            self.checked_proxies.append(proxy)
+            data = r.json()
+            # 高匿检测
+            if anonymous:
+                if data['origin'] == proxy.values()[0].split(':')[0]:
+                    self.ok.append(proxy)
+            self.ok.append(proxy)
         except Exception as e:
             print e
 
