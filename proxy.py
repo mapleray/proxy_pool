@@ -49,7 +49,7 @@ class Proxy(object):
                 proxy_type = base64.b64decode(line['type'])
                 ip = base64.b64decode(line['ip'])
                 port = base64.b64decode(line['port'])
-                self.proxies.append({proxy_type: ip+':' +port})
+                self.proxies.append({proxy_type: ip + ':' + port})
             i = i + 1
 
     def _check_proxy(self, proxy, anonymous=False):
@@ -60,8 +60,8 @@ class Proxy(object):
             # 高匿检测
             if anonymous:
                 if data['origin'] == proxy.values()[0].split(':')[0]:
-                    self.ok.append(proxy)
-            self.ok.append(proxy)
+                    self.checked_proxies.append(proxy)
+            self.checked_proxies.append(proxy)
         except Exception as e:
             print e
 
@@ -77,4 +77,3 @@ class Proxy(object):
 if __name__ == '__main__':
     ins = Proxy()
     print ins.get_proxy()
-
